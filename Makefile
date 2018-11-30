@@ -4,7 +4,7 @@ CCFLAGS = -Wall -O3
 GIT_HOOKS := .git/hooks/applied
 
 all: $(GIT_HOOKS)
-	$(CC) $(CCFLAGS) -o main main.c parser.c error_checking.c signal_converter.c
+	$(CC) $(CCFLAGS) -o main main.c typedefine.h parser.c error_checking.c signal_converter.c
 
 $(GIT_HOOKS):
 	@.githooks/install-git-hooks
