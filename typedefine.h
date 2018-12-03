@@ -10,11 +10,9 @@ typedef struct {
 
 typedef  struct {
     uint32_t ID_A;
-    char SRR:1;
     char IDE:1;
-    uint32_t ID_B;
     char RTR:1;
-    char Res:2;
+    char Res:1;
     char DLC:4;
     char data[9];    //the last element is for '\0'
     uint32_t CRC:15;
