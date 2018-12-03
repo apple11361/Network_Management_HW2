@@ -70,7 +70,42 @@ int frame_check(logic_signal_packet* input)
 	return 0;
 }
 
+uint16_t can_crc_next(uint16_t crc, uint8_t data)
+{
+  uint8_t i, j;
+
+  crc ^= (uint16_t)data << 7;
+
+  for (i = 0; i < 8; i++)
+  {
+    crc <<= 1;
+    if (crc & 0x8000)
+    {
+      crc ^= 0xc599;
+    }
+  }
+
+  return crc & 0x7fff;
+}
+
 int crc_check(frame_struct* input)
 {
+  int data_num = input->DLC;
+	uint8_t crc_input[11];
+	for(int i = 0; i < data_num; i++)
+	{
+		crc_input[i + 3] = input->data[data_num - 1 - i];
+	}
+	crc_input[2] = (uint8_t)((input->ID_A & 1) << 7) + data_num;
+	crc_input[1] = (uint8_t)(input->ID_A >> 1);
+	crc_input[0] = (uint8_t)(input->ID_A >> 9);
 
+  uint16_t crc;
+  crc = 0;
+
+  for (int i = 0; i < data_num + 3; i++)
+	{
+    crc = can_crc_next(crc, crc_input[i]);
+  }
+	return crc;
 }
