@@ -34,10 +34,10 @@ int receive()
     }
     else {
         i=159;
+        int temp1;
+        int temp2;
         while((chH = fgetc(H)) != EOF) { 
             chL = fgetc(L);
-            int temp1;
-            int temp2;
             if(chH != ' '){
                 if(chH=='1')temp1=1;
                 else temp1=0;
@@ -53,7 +53,6 @@ int receive()
                     i--;
                 }
                 else {
-                    count++;
                     packet->packet_len = 160 - temp;
                     parse(packet,result_packet);
                     if(bit_stuffing_check(packet)==-1)
@@ -63,7 +62,7 @@ int receive()
                     else if(crc_check(result_packet)==-1)
                         printf("crc_check Error\n");
                     else 
-                        save_data(result_packet,count, 160 - temp);
+                        save_data(result_packet,++count, 160 - temp);
                     for(i=0;i<5;i++)
                         packet->bits[i]=0;
                     packet->packet_len=0;
@@ -71,6 +70,16 @@ int receive()
                 }
             }
         }
+        packet->packet_len = 160 - temp;
+        parse(packet,result_packet);
+        if(bit_stuffing_check(packet)==-1)
+            printf("bit_stuffing_check Error\n");
+        else if(frame_check(packet)==-1)
+            printf("frame_check Error\n");
+        else if(crc_check(result_packet)==-1)
+            printf("crc_check Error\n");
+        else 
+            save_data(result_packet,++count, 160 - temp);
     }
 }
 
