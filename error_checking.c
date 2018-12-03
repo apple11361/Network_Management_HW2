@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <typedefine.h>
+#include "typedefine.h"
 
 int bit_stuffing_check(logic_signal_packet* input)
 {

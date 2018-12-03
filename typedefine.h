@@ -9,10 +9,11 @@ typedef struct {
 } logic_signal_packet; //the first bit is lsb
 
 typedef  struct {
+    char SOF;
     uint32_t ID_A;
     char IDE:1;
     char RTR:1;
-    char Res:1;
+    char r0:1;
     char DLC:4;
     char data[9];    //the last element is for '\0'
     uint32_t CRC:15;
