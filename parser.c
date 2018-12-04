@@ -30,7 +30,7 @@ void parse(logic_signal_packet *in,frame_struct *out)
                 count, cur_bit, in->bits[count/32], (0x01 << (count%32)),
                 (in->bits[count/32] & (0x01 << (count%32))),
                 count_1,count_0);*/
-        if(count_1 == 5 || count_0 == 5) {
+        if(/*count_1 == 5 ||*/ count_0 == 5) {
             if(payload_len > 0) {
                 if ( (target_buffer_len - i - 8*payload_len ) < 34 )
                     count --;
@@ -100,21 +100,24 @@ void parse(logic_signal_packet *in,frame_struct *out)
                 out->end_of_frame = out->end_of_frame + (((result[2] >>i) & 0x1) << i);
             break;
         case 1: {
+            out->CRC = 0;
             out->data[0]='\0';
             for(int i=12; i>=5; i--) {
                 //printf("(((result[2] >>i) & 0x1):%X:\n",((result[3] >>i) & 0x1));
                 out->data[0] = out->data[0] | (((result[3] >>i) & 0x1) << (i-5));
             }
             out->data[1] = '\0';
-            for(int i=4; i>=0; i--)
-                out->CRC = out->CRC + ((result[3] >>i) & 0x1) << (i+10);
-            for(int i=31; i>=22; i--)
-                out->CRC = out->CRC + ((result[2] >>i) & 0x1) << (i-22);
+            for(int i=4; i>=0; i--) {
+                out->CRC = out->CRC + (((result[3] >>i) & 0x1) << (i+10));
+            }
+            for(int i=31; i>=22; i--) {
+                out->CRC = out->CRC + (((result[2] >>i) & 0x1) << (i-22));
+            }
             out->CRC_del = (result[2] >> 21) & 0x1;
             out->ACK = (result[2] >> 20) & 0x1;
             out->ACK_del = (result[2] >> 19) & 0x1;
             for(int i=18; i>=12; i--)
-                out->end_of_frame = out->end_of_frame + (((result[2] >>i) & 0x1) << (i-12));
+                out->end_of_frame = out->end_of_frame + ((((result[2] >>i) & 0x1) << (i-12)));
 
             //printf("data[0]:0x%08X\n",out->data[0]);
             break;
