@@ -1,5 +1,5 @@
-ID:13, data:a, packet count:1, packet length: 54
-Packet count:2, CRC error!
+ID:13, data:a, packet count:1, packet length:54
+Packet count:2, CRC check error!
 Packet count:3, Frame check error!
-Packet count:4, Bit stuffing error!
-ID:2, data:P, packet count:5, packet length: 55
+Packet count:4, Bit stuffing check error!
+ID: 2, data:P, packet count:5, packet length:56
