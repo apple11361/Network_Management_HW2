@@ -6,7 +6,7 @@
 typedef struct {
     uint32_t bits[5];
     uint32_t packet_len;
-} logic_signal_packet; //the first bit is lsb
+} logic_signal_packet; //the first bit is msb
 
 typedef  struct {
     char SOF;

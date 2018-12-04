@@ -11,15 +11,18 @@ int bit_stuffing_check(logic_signal_packet* input)
     uint32_t count = 0;
 
     for(int i = 0; i <= find_byte; i++) {
-        if(i == find_byte) find_bit = len % 32;
+        if(i == find_byte)
+            find_bit = len % 32;
         for(int j = 0; j < find_bit; j++) {
-            if((input->bits[i] >> j) & 1 == 1) count = 0;
-            else count++;
+            if(((input->bits[4-i] >> (31-j)) & 1) == 1)
+                count = 0;
+            else
+                count++;
 
-            if(count > 5) return 0;
+            if(count > 5) return -1;
         }
     }
-    return 1;
+    return 0;
 }
 
 int frame_check(logic_signal_packet* input)
@@ -47,10 +50,10 @@ int frame_check(logic_signal_packet* input)
             }
 
             if(position == 12 || position == 13 || position == 14) {
-                if((input->bits[i] >> j) & 1 == 1) return -1;
+                if(((input->bits[i] >> j) & 1) == 1) return -1;
             }
             if((i * 32 + j) >= check_bound) {
-                if((input->bits[i] >> j) & 1 == 0) return -1;
+                if(((input->bits[i] >> j) & 1) == 0) return -1;
             }
 
             if(count == 5) {
