@@ -2,12 +2,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "typedefine.h"
+#include "signal_converter.h"
+#include "parser.h"
+#include "error_checking.h"
 
-int receive();
-int signal_convert(int h, int l);
-void save_data(frame_struct* , int, int);
-
-int receive()
+void receive()
 {
     int i;
     int count=0;
@@ -23,10 +22,8 @@ int receive()
         packet->bits[i]=0;
     if( NULL == H ) {
         printf( "High.txt open failure\n" );
-        return 0;
     } else if( NULL == L ) {
         printf( "Low.txt open failure\n" );
-        return 0;
     } else {
         i=159;
         int temp1;

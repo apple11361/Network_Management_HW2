@@ -10,5 +10,10 @@ $(GIT_HOOKS):
 	@.githooks/install-git-hooks
 	@echo
 
+parse:
+	./main
+	./main > out.txt
+compare:
+	diff out.txt test_case/output.txt
 clean:
-	rm -rf main
+	rm -rf main out.txt *.o

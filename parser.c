@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdint.h>
-#include"typedefine.h"
+#include"parser.h"
 
 #define target_buffer_len 127
 
@@ -8,7 +8,6 @@ void parse(logic_signal_packet *in,frame_struct *out)
 {
     uint32_t count_1 = 0;
     uint32_t count_0 = 0;
-    uint32_t check = 0;
     uint32_t result[4]= {0};
     //remove stuffing bit
     int i= target_buffer_len;
