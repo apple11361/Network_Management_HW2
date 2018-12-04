@@ -98,5 +98,9 @@ int crc_check(frame_struct* input)
     for (int i = 0; i < data_num + 3; i++) {
         crc = can_crc_next(crc, crc_input[i]);
     }
-    return crc;
+
+    if(crc == input->CRC)
+        return 0;
+    else
+        return -1;
 }
