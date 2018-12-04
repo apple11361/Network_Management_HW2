@@ -31,7 +31,8 @@ int receive()
         i=159;
         int temp1;
         int temp2;
-        while((chH = fgetc(H)) != EOF) {
+        do{
+            chH = fgetc(H);
             chL = fgetc(L);
             if(chH != ' ') {
                 if(chH=='1')temp1=1;
@@ -40,7 +41,7 @@ int receive()
                     temp2=-1;
                     fgetc(L);
                 } else temp2=0;
-                if(chH != '\n') {
+                if(chH != '\n' && chH != EOF) {
                     result = signal_convert(temp1,temp2);
                     packet->bits[i/32] = packet->bits[i/32] + (result << (i%32));
                     temp = i;
@@ -48,7 +49,9 @@ int receive()
                 } else {
                     packet->packet_len = 160 - temp;
                     parse(packet,result_packet);
-                    if(bit_stuffing_check(packet)==-1)
+                    if(temp == 160)
+                        ;
+                    else if(bit_stuffing_check(packet)==-1)
                         printf("bit_stuffing_check Error\n");
                     else if(frame_check(packet)==-1)
                         printf("frame_check Error\n");
@@ -60,19 +63,10 @@ int receive()
                         packet->bits[i]=0;
                     packet->packet_len=0;
                     i=159;
+                    temp = 160;
                 }
             }
-        }
-        packet->packet_len = 160 - temp;
-        parse(packet,result_packet);
-        if(bit_stuffing_check(packet)==-1)
-            printf("bit_stuffing_check Error\n");
-        else if(frame_check(packet)==-1)
-            printf("frame_check Error\n");
-        else if(crc_check(result_packet)==-1)
-            printf("crc_check Error\n");
-        else
-            save_data(result_packet,++count, 160 - temp);
+        }while(chH != EOF);
     }
 }
 
@@ -89,3 +83,4 @@ void save_data(frame_struct* frame , int count, int packet_length)
     printf("ID:%2d, data:%s, packet count:%d, packet length:%d\n", frame->ID_A,
            frame->data, count, packet_length);
 }
+
